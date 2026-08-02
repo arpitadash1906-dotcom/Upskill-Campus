@@ -1,38 +1,67 @@
 # TravelGrid
 
-TravelGrid is a full-stack travel planning platform for discovering destinations, planning trips, and working with travel services from one place. The project includes a React frontend, an Express/MongoDB backend, and an optional FastAPI-based AI travel planning service.
+Production-ready full-stack travel platform for trip discovery, booking workflows, AI-assisted planning, itinerary support, travel utilities, and collaborative travel experiences.
 
-[Live demo](https://travel-grid.vercel.app/) | [Repository](https://github.com/Adarsh-Chaubey03/TravelGrid)
+[Live demo](https://travel-grid.vercel.app/) | [GitHub repository](https://github.com/arpitadash1906-dotcom/Upskill-Campus)
 
-## Features
+## Overview
 
-- Destination discovery and travel planning workflows
-- Flight, hotel, vehicle, and guide-oriented booking experiences
-- AI-powered itinerary, budget, and recommendation support
-- Authentication-ready backend with JWT, cookies, validation, and security middleware
-- Responsive React UI built with Vite and Tailwind CSS
-- Optional MCP-style travel data services for flights, hotels, places, and currency
+TravelGrid combines a modern React frontend, an Express/MongoDB API, real-time collaboration through Socket.IO, and an optional Python AI planning service. It is designed as a modular travel application where users can explore destinations, manage bookings, plan trips, compare costs, save places, share trips, and use AI-powered travel helpers.
+
+## Core Capabilities
+
+- Destination discovery, travel packages, hotels, rentals, guides, and saved places
+- User authentication, email verification, protected routes, and profile management
+- Booking, review, wishlist, forum, checklist, mood board, and sharing flows
+- Trip expense calculator, visa checker, map-based itinerary views, QR sharing, and PDF generation
+- Multi-language frontend support with locale files under `client/src/locales`
+- Real-time collaboration features powered by Socket.IO
+- AI travel planning service using FastAPI, LangGraph, LangChain, OpenAI, and MCP-style helper services
+- API security middleware for sanitization, XSS protection, CORS, Helmet headers, and rate limiting
+
+## Architecture
+
+```text
+Browser
+  |
+  | React + Vite frontend
+  v
+client/ ------------------------------+
+                                      |
+                                      v
+Server/ Express API + Socket.IO ---> MongoDB
+  |
+  | Optional AI planning calls
+  v
+travel-ai-system/
+  |-- ai-service/      FastAPI + LangGraph planner
+  `-- mcp-servers/    Flights, hotels, places, currency helpers
+```
 
 ## Tech Stack
 
-| Area | Technologies |
+| Layer | Technology |
 | --- | --- |
-| Frontend | React, Vite, Tailwind CSS, Redux Toolkit, React Router |
+| Frontend | React 19, Vite, Tailwind CSS, Redux Toolkit, React Router, MUI, Framer Motion |
 | Backend | Node.js, Express, MongoDB, Mongoose, Socket.IO |
-| AI service | Python, FastAPI, LangGraph, LangChain, OpenAI |
-| Tooling | ESLint, Prettier-compatible formatting, Git, GitHub |
+| AI service | Python, FastAPI, LangGraph, LangChain, OpenAI, FAISS |
+| Security | Helmet, CORS, rate limiting, input sanitization, JWT |
+| Utilities | Leaflet, i18next, jsPDF, QR code generation, EmailJS, Nodemailer |
+| Tooling | npm, ESLint, Jest, GitHub |
 
-## Project Structure
+## Repository Structure
 
 ```text
 TravelGrid/
-|-- client/                    # React + Vite frontend
-|-- Server/                    # Express + MongoDB backend
+|-- client/                    # React + Vite application
+|-- Server/                    # Express API, Socket.IO, MongoDB models, tests
 |-- travel-ai-system/
-|   |-- ai-service/            # FastAPI/LangGraph travel planner
-|   `-- mcp-servers/           # Currency, flight, hotel, and place services
+|   |-- ai-service/            # FastAPI + LangGraph AI planner
+|   `-- mcp-servers/           # Travel helper services
 |-- CODE_OF_CONDUCT.md
 |-- CONTRIBUTING.md
+|-- DEPLOYMENT.md
+|-- SECURITY.md
 |-- LICENSE
 `-- README.md
 ```
@@ -40,14 +69,14 @@ TravelGrid/
 ## Prerequisites
 
 - Node.js 18 or newer
-- npm
-- Python 3.10 or newer, for the optional AI service
-- MongoDB connection string
-- API keys for any external providers you enable
+- npm 9 or newer
+- Python 3.10 or newer, only for the AI service
+- MongoDB Atlas or local MongoDB
+- API keys for enabled third-party services
 
-## Environment Variables
+## Environment Configuration
 
-Create local `.env` files from the examples before running the services.
+Create local environment files from the committed examples:
 
 ```bash
 cp client/.env.example client/.env
@@ -55,30 +84,35 @@ cp Server/.env.example Server/.env
 cp travel-ai-system/ai-service/.env.example travel-ai-system/ai-service/.env
 ```
 
-Common values:
+Important variables:
 
-| File | Variable | Purpose |
-| --- | --- | --- |
-| `client/.env` | `VITE_API_URL` | Backend API base URL |
-| `Server/.env` | `MONGODB_URI` | MongoDB connection string |
-| `Server/.env` | `JWT_SECRET` | Secret used to sign JWTs |
-| `Server/.env` | `PORT` | Backend port, defaults to `5000` |
-| `travel-ai-system/ai-service/.env` | `OPENAI_API_KEY` | Enables AI itinerary planning |
+| File | Variable | Required | Description |
+| --- | --- | --- | --- |
+| `client/.env` | `VITE_API_URL` | Yes | Base URL for the Express API |
+| `Server/.env` | `MONGODB_URI` | Yes | MongoDB connection string |
+| `Server/.env` | `JWT_SECRET` | Yes | Secret for signing JWTs |
+| `Server/.env` | `PORT` | No | API port, defaults to `5000` |
+| `Server/.env` | `RAPIDAPI_KEY` | Feature-based | Train search provider key |
+| `Server/.env` | `DATA_GOV_API_KEY` | Feature-based | Bus data provider key |
+| `Server/.env` | `AVIATION_API_KEY` | Feature-based | Flight data provider key |
+| `travel-ai-system/ai-service/.env` | `OPENAI_API_KEY` | AI only | Enables AI itinerary planning |
 
-## Getting Started
+Never commit real `.env` files, production secrets, uploaded media, virtual environments, or build output.
 
-Install and run the frontend:
+## Local Development
+
+Install and start the backend:
 
 ```bash
-cd client
+cd Server
 npm install
 npm run dev
 ```
 
-Install and run the backend:
+Install and start the frontend:
 
 ```bash
-cd Server
+cd client
 npm install
 npm run dev
 ```
@@ -93,15 +127,16 @@ pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
 ```
 
-Default local URLs:
+Default local services:
 
 | Service | URL |
 | --- | --- |
 | Frontend | `http://localhost:5173` |
-| Backend | `http://localhost:5000` |
+| Backend API | `http://localhost:5000` |
+| API health check | `http://localhost:5000/api/health` |
 | AI service | `http://localhost:8000` |
 
-## Scripts
+## Available Scripts
 
 Frontend:
 
@@ -120,25 +155,97 @@ cd Server
 npm start
 npm run dev
 npm test
+npm run test:watch
 ```
 
-## API Notes
+AI service:
 
-- Backend API routes are served from the Express application in `Server/`.
-- The AI planner exposes `POST /plan` from `travel-ai-system/ai-service/main.py`.
-- MCP server modules live under `travel-ai-system/mcp-servers/` and can be run or wired into the AI service as needed.
+```bash
+cd travel-ai-system/ai-service
+python -m py_compile main.py
+uvicorn main:app --reload --port 8000
+```
+
+## API Surface
+
+The Express server mounts the main REST API under `/api`.
+
+Common route groups include:
+
+| Route | Purpose |
+| --- | --- |
+| `/api/health` | Runtime health check |
+| `/api/auth` | Authentication |
+| `/api/email` | Email verification |
+| `/api/users` | User profile operations |
+| `/api/bookings` | Booking workflows |
+| `/api/reviews` | Reviews |
+| `/api/search` | Search |
+| `/api/currency` | Currency utilities |
+| `/api/chatbot` | Chatbot flows |
+| `/api/checklist` | Travel checklist |
+| `/api/trains/search` | Train search |
+| `/api/buses/search` | Bus search |
+| `/api/flights/search` | Flight search |
+
+The AI planner exposes:
+
+```text
+POST /plan
+```
+
+from `travel-ai-system/ai-service/main.py`.
+
+## Production Checklist
+
+Before deploying:
+
+- Set `NODE_ENV=production` for the backend.
+- Use strong, rotated values for `JWT_SECRET` and API keys.
+- Restrict CORS origins to deployed frontend domains.
+- Use managed MongoDB with backups enabled.
+- Configure HTTPS at the hosting or reverse proxy layer.
+- Store uploaded media in object storage instead of the repository.
+- Run frontend build and backend tests before release.
+- Monitor logs, API errors, rate-limit events, and database connection failures.
+
+More deployment guidance is available in `DEPLOYMENT.md`.
+
+## Quality Gates
+
+Recommended checks before opening a pull request:
+
+```bash
+cd client
+npm run lint
+npm run build
+```
+
+```bash
+cd Server
+npm test
+```
+
+```bash
+cd travel-ai-system/ai-service
+python -m compileall . -q
+```
 
 ## Contributing
 
-Contributions are welcome. Please read `CONTRIBUTING.md` and `CODE_OF_CONDUCT.md` before opening an issue or pull request.
+Contributions are welcome. Please read `CONTRIBUTING.md` and `CODE_OF_CONDUCT.md` before opening a pull request.
 
-Recommended flow:
+Recommended workflow:
 
-1. Fork the repository.
-2. Create a feature branch.
-3. Install dependencies for the service you are changing.
-4. Run the relevant lint, build, or test command.
-5. Open a pull request with a clear description and linked issue.
+1. Create a focused branch from `main`.
+2. Make the smallest complete change.
+3. Update docs or examples when behavior changes.
+4. Run the relevant checks.
+5. Open a pull request with a clear summary and verification notes.
+
+## Security
+
+Please do not open public issues for sensitive vulnerabilities. Follow `SECURITY.md` for responsible disclosure.
 
 ## License
 

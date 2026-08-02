@@ -1,65 +1,84 @@
-# TravelGrid Contribution Guide (GSSoC'25)
+# Contributing to TravelGrid
 
-Thank you for contributing to TravelGrid! This guide is short and aimed at first-time contributors.
+Thanks for helping improve TravelGrid. This project welcomes focused, well-tested contributions across the frontend, backend, AI service, documentation, and developer tooling.
 
-## 1. Report an Issue
+## How to Contribute
 
-* Open a new GitHub Issue with a clear title and steps to reproduce.
-* Include:
+1. Check existing issues and pull requests to avoid duplicate work.
+2. Fork the repository and create a focused branch.
+3. Make your change with clear code and minimal unrelated edits.
+4. Run the checks for the area you touched.
+5. Open a pull request with a concise summary, screenshots when useful, and verification steps.
 
-  * What you expected
-  * What happened instead
-  * Any error messages or screenshots
-* Tag the issue with labels like `bug`, `enhancement`, or `question` if available.
+## Branch Naming
 
-## 2. Fork, Clone, and Create a Pull Request
+Use short branch names with a clear prefix:
 
-* Fork the repository on GitHub (top-right "Fork").
-* Clone your fork locally:
+```text
+feat/trip-sharing
+fix/auth-redirect
+docs/readme-production-guide
+chore/update-env-examples
+```
 
-  ```bash
-  git clone https://github.com/<your-username>/TravelGrid.git
-  cd TravelGrid
-  ```
-* Create a feature branch from `main` or `develop`:
+## Commit Messages
 
-  ```bash
-  git checkout -b feat/short-description
-  ```
-* Make changes, run the app and tests (if any), then commit.
-* Push your branch:
+Use present-tense commit messages:
 
-  ```bash
-  git push origin feat/short-description
-  ```
-* Open a Pull Request to the original repo, describe the change, and link related issues.
+```text
+Add booking validation
+Fix login redirect
+Document AI service setup
+```
 
-## 3. Branch Naming and Commit Messages
+## Development Checks
 
-* Use simple branch names: `feat/`, `fix/`, `chore/`, `docs/` + short-description
+Frontend:
 
-  * Examples: `feat/profile-dropdown`, `fix/login-auth`
-* Commit messages (one-line subject):
+```bash
+cd client
+npm run lint
+npm run build
+```
 
-  * Use present tense: "Add" not "Added"
-  * Prefix with scope when helpful: `auth: fix login redirect`
-  * Keep it short and clear
+Backend:
 
-## 4. Code Style & Formatting
+```bash
+cd Server
+npm test
+```
 
-* Follow the existing code style in the project.
-* JavaScript/React: consistent spacing, semicolons where the project uses them, readable names.
-* Run linters/formatters if present (e.g., `npm run lint`, `npm run format`).
-* Keep changes focused — small, easy-to-review PRs are best.
+AI service:
 
-## 5. Tests and Verification
+```bash
+cd travel-ai-system/ai-service
+python -m compileall . -q
+```
 
-* If you add behavior, try to include a simple test or manual verification steps.
-* Document any environment variables or setup steps needed to run your change.
+## Pull Request Expectations
 
-## 6. Be Welcome!
+- Keep pull requests focused and reviewable.
+- Include screenshots or screen recordings for UI changes.
+- Include migration notes for schema or environment changes.
+- Do not commit `.env` files, secrets, dependency directories, build outputs, or uploaded media.
+- Update `README.md`, `DEPLOYMENT.md`, or `.env.example` files when setup changes.
 
-* Everyone starts somewhere — ask questions in issues or discussions.
-* Be patient, polite, and provide context when asking for help.
+## Code Style
 
-Thanks for helping make TravelGrid better — we appreciate your time and ideas! 🎉
+- Follow the patterns already used in the touched module.
+- Prefer descriptive names over comments for simple logic.
+- Keep API responses consistent with existing route handlers.
+- Validate and sanitize user input on server-side changes.
+- Handle loading, empty, error, and success states in frontend changes.
+
+## Reporting Issues
+
+When opening a bug report, include:
+
+- Steps to reproduce
+- Expected behavior
+- Actual behavior
+- Screenshots or logs when relevant
+- Browser, OS, Node.js, and Python versions when useful
+
+For security issues, follow `SECURITY.md` instead of opening a public issue.
